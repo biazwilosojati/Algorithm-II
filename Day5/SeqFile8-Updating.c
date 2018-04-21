@@ -4,42 +4,47 @@
 int main() {
 
 	struct {
-		char prodi[3];
+		char npm[3];
 		char nama[100];
-		char nilai[3];
-	}rekaman;
+		float ipk;
+	}rekamanMaster, rekamanTrans;
 
-	FILE *arsipMatkul;
-	FILE *arsipMatkulUpdate;
+    FILE *fileMaster;
+    FILE *fileTrans;
+    FILE *fileNewMaster;
 
-	arsipMatkul = fopen("ArsipMatKulA.dat", "r");
-	arsipMatkulUpdate = fopen("ArsipMatKulUpdate.dat", "w");
+    fileMaster = fopen("FileMaster.txt", "r");
+    fileNewMaster = fopen("FileNewMaster.txt", "w");
 
-	// baca data pertama
-	fscanf(arsipMatkul, "%s %s %s\n", &rekaman.prodi, 
-		&rekaman.nama, &rekaman.nilai);
+    while(!feof(fileMaster)) {
+        printf("File master \n");
+        fscanf(fileMaster, "%s %s %f\n", &rekamanMaster.npm, &rekamanMaster.nama, &rekamanMaster.ipk);
+        printf("%s %s %f\n", rekamanMaster.npm, rekamanMaster.nama, rekamanMaster.ipk);
 
-	// baca data 
-	do{
+        printf("File Trans \n");
+        fileTrans = fopen("FileTrans.txt", "r");
+        while(!feof(fileTrans)) {
+            fscanf(fileTrans, "%s %s %f\n", &rekamanTrans.npm, &rekamanTrans.nama, &rekamanTrans.ipk);
+            printf("%s %s %f\n", rekamanTrans.npm, rekamanTrans.nama, rekamanTrans.ipk);
 
-	  //core logic 
-	  //jika prodi if dan nama = "ccc"
-	  if((strcmp(rekaman.prodi,"IF") == 0) && (strcmp(rekaman.nama,"ccc") == 0)){
-	  	//ganti nilai jadi 80 
-	  	strcpy(rekaman.nilai, "80");
-	  }
+            // put the logic to update ipk value here
+            if (strcmp(rekamanTrans.npm, rekamanMaster.npm) == 0){
+                rekamanMaster.ipk = rekamanTrans.ipk;
+            }
+            //
+            //
+            //
+            //
+            //
 
-	  fprintf(arsipMatkulUpdate, "%s %s %s\n", rekaman.prodi, rekaman.nama, 
-	  	rekaman.nilai);
+        }
 
-	  	//baca data berikutnya
-	  fscanf(arsipMatkul, "%s %s %s\n", &rekaman.prodi, 
-		&rekaman.nama, &rekaman.nilai);
-	  
-	}while(!feof(arsipMatkul));
+        fprintf(fileNewMaster, "%s %s %f\n", rekamanMaster.npm, rekamanMaster.nama, rekamanMaster.ipk);
+        fclose(fileTrans);
+    }
 
-	fclose(arsipMatkul);
-	fclose(arsipMatkulUpdate);
-	     
+    fclose(fileMaster);
+    fclose(fileNewMaster);
+
 	return 0;
 }
